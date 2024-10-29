@@ -16,47 +16,46 @@ interface ImageUploadProps {
     sellingPoints: string;
     targetAudience: string;
   }>>;
+  onError?: (error: string) => void;
 }
 
-export function ImageUpload({ 
-  imagePreviews, 
-  setImagePreviews, 
-  formData, 
-  setFormData 
-}: ImageUploadProps) {
-  const MAX_IMAGES = 9;
-
+export const ImageUpload: React.FC<ImageUploadProps> = ({
+  imagePreviews,
+  setImagePreviews,
+  formData,
+  setFormData,
+  onError
+}) => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    const totalImages = formData.images.length + files.length;
     
-    if (totalImages > MAX_IMAGES) {
-      alert(`最多只能上传${MAX_IMAGES}张图片`);
+    if (formData.images.length + files.length > 9) {
+      onError?.('最多只能上传9张图片');
       return;
     }
 
-    const newFiles = files.slice(0, MAX_IMAGES - formData.images.length);
-    const newPreviews = newFiles.map(file => URL.createObjectURL(file));
-    
+    const newPreviews = files.map(file => URL.createObjectURL(file));
+    setImagePreviews(prev => [...prev, ...newPreviews]);
+
     setFormData(prev => ({
       ...prev,
-      images: [...prev.images, ...newFiles]
+      images: [...prev.images, ...files]
     }));
-    setImagePreviews(prev => [...prev, ...newPreviews]);
   };
 
-  const removeImage = (index: number) => {
+  const handleRemoveImage = (index: number) => {
+    setImagePreviews(prev => prev.filter((_, i) => i !== index));
     setFormData(prev => ({
       ...prev,
       images: prev.images.filter((_, i) => i !== index)
     }));
-    setImagePreviews(prev => prev.filter((_, i) => i !== index));
   };
 
   return (
     <div className="space-y-2">
       <label className="block text-sm font-medium text-gray-700">
-        商品图片上传 ({formData.images.length}/{MAX_IMAGES})
+        上传图片 <span className="text-red-500">*</span>
+        <span className="text-gray-500 text-xs ml-2">(1-9张)</span>
       </label>
       <div className="grid grid-cols-3 gap-4">
         {imagePreviews.map((preview, index) => (
@@ -68,14 +67,14 @@ export function ImageUpload({
             />
             <button
               type="button"
-              onClick={() => removeImage(index)}
+              onClick={() => handleRemoveImage(index)}
               className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
         ))}
-        {formData.images.length < MAX_IMAGES && (
+        {formData.images.length < 9 && (
           <label className="aspect-square flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg hover:border-yolk-400 transition-colors cursor-pointer">
             <Upload className="h-8 w-8 text-gray-400" />
             <span className="mt-2 text-sm text-gray-500">上传图片</span>
@@ -92,4 +91,4 @@ export function ImageUpload({
       <p className="text-xs text-gray-500 mt-2">支持 PNG, JPG, GIF 格式，单张最大 10MB</p>
     </div>
   );
-}
+};

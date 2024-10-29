@@ -1,40 +1,70 @@
 import React from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Image } from 'lucide-react';
 
 interface ImageGalleryProps {
   images: string[];
-  onRegenerateImages: () => void;
 }
 
-export function ImageGallery({ images, onRegenerateImages }: ImageGalleryProps) {
-  const defaultImages = [
-    'https://images.unsplash.com/photo-1542291026-7eec264c27ff',
-    'https://images.unsplash.com/photo-1523275335684-37898b6baf30',
-    'https://images.unsplash.com/photo-1546868871-7041f2a55e12'
-  ];
+export const ImageGallery: React.FC<ImageGalleryProps> = ({
+  images,
+}) => {
+  if (images.length === 0) {
+    return (
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold text-zinc-100 mb-4">笔记图片</h2>
+        <div className="bg-zinc-900/50 rounded-xl p-8 border border-zinc-700 
+          flex flex-col items-center justify-center min-h-[300px]">
+          <Image className="w-16 h-16 text-zinc-600 mb-4" />
+          <p className="text-zinc-400 text-center">
+            上传图片并点击生成按钮<br />
+            AI将为您创作精美的图片内容
+          </p>
+        </div>
+      </div>
+    );
+  }
 
-  const displayImages = images.length > 0 ? images : defaultImages;
+  // 根据图片数量决定布局
+  const getGridLayout = (count: number) => {
+    if (count === 1) return 'grid-cols-1';
+    if (count === 2) return 'grid-cols-2';
+    if (count === 3) return 'grid-cols-3';
+    if (count === 4) return 'grid-cols-2';
+    if (count <= 6) return 'grid-cols-3';
+    return 'grid-cols-3';
+  };
+
+  const getImageHeight = (count: number) => {
+    if (count === 1) return 'h-[600px]';
+    if (count === 2) return 'h-[400px]';
+    if (count <= 4) return 'h-[300px]';
+    return 'h-[250px]';
+  };
 
   return (
     <div className="space-y-4">
-      <div className="relative h-64 bg-yolk-50 rounded-xl overflow-hidden border border-yolk-200">
-        <div className="flex h-full">
-          {displayImages.map((image, index) => (
+      <h2 className="text-xl font-semibold text-zinc-100 mb-4">笔记图片</h2>
+      <div className={`grid ${getGridLayout(images.length)} gap-4`}>
+        {images.map((url, index) => (
+          <div
+            key={index}
+            className={`relative ${getImageHeight(images.length)} group overflow-hidden rounded-xl 
+              border border-zinc-700 bg-zinc-900`}
+          >
             <img
-              key={index}
-              src={`${image}?w=400&h=300&fit=crop`}
-              alt={`Generated content ${index + 1}`}
-              className="w-full h-full object-cover"
+              src={url}
+              alt={`Generated ${index + 1}`}
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
-          ))}
-        </div>
-        <button className="absolute left-2 top-1/2 -translate-y-1/2 p-1 bg-white/90 rounded-full shadow-lg hover:bg-white text-yolk-700">
-          <ChevronLeft className="w-5 h-5" />
-        </button>
-        <button className="absolute right-2 top-1/2 -translate-y-1/2 p-1 bg-white/90 rounded-full shadow-lg hover:bg-white text-yolk-700">
-          <ChevronRight className="w-5 h-5" />
-        </button>
+            <div className="absolute inset-0 bg-zinc-900 bg-opacity-0 group-hover:bg-opacity-30 
+              transition-opacity duration-300" />
+            <span className="absolute bottom-2 right-2 bg-zinc-900 bg-opacity-75 text-zinc-100 
+              px-2 py-1 rounded-md text-sm border border-zinc-700">
+              {index + 1}/{images.length}
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   );
-}
+};
