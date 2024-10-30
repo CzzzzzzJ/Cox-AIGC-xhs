@@ -1,9 +1,11 @@
 import React from 'react';
-import { RefreshCw, FileText } from 'lucide-react';
+import { RefreshCw, FileText, Download } from 'lucide-react';
+import JSZip from 'jszip';
 
 interface ContentDisplayProps {
   title: string;
   content: string;
+  images: string[];
   onRegenerateContent: () => void;
   onRegenerateImages: () => void;
 }
@@ -11,10 +13,48 @@ interface ContentDisplayProps {
 export const ContentDisplay: React.FC<ContentDisplayProps> = ({
   title,
   content,
+  images,
   onRegenerateContent,
   onRegenerateImages,
 }) => {
-  // 初始状态展示
+  const handleDownload = async () => {
+    try {
+      const textContent = `${title}\n\n${content}`;
+      const textBlob = new Blob([textContent], { type: 'text/plain' });
+      
+      const imagePromises = images.map(async (url, index) => {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        return { blob, index };
+      });
+
+      const imageBlobs = await Promise.all(imagePromises);
+
+      const zip = new JSZip();
+      
+      zip.file('content.txt', textBlob);
+      
+      imageBlobs.forEach(({ blob, index }) => {
+        const extension = blob.type.split('/')[1];
+        zip.file(`image-${index + 1}.${extension}`, blob);
+      });
+
+      const zipBlob = await zip.generateAsync({ type: 'blob' });
+      const downloadUrl = URL.createObjectURL(zipBlob);
+      
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = `笔记内容-${new Date().toLocaleString()}.zip`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(downloadUrl);
+    } catch (error) {
+      console.error('下载失败:', error);
+      alert('下载失败，请重试');
+    }
+  };
+
   if (!title && !content) {
     return (
       <div className="space-y-6">
@@ -62,6 +102,15 @@ export const ContentDisplay: React.FC<ContentDisplayProps> = ({
         >
           <RefreshCw className="w-4 h-4" />
           换图片
+        </button>
+        <button
+          onClick={handleDownload}
+          className="flex-1 flex items-center justify-center gap-2 px-4 py-3 
+            bg-emerald-600 hover:bg-emerald-700 text-white
+            rounded-lg transition-all duration-200"
+        >
+          <Download className="w-4 h-4" />
+          打包下载
         </button>
       </div>
     </div>

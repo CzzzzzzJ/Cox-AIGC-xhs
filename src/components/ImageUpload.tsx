@@ -7,12 +7,14 @@ interface ImageUploadProps {
   formData: {
     images: File[];
     contentType: string;
+    productInfo: string;
     sellingPoints: string;
     targetAudience: string;
   };
   setFormData: React.Dispatch<React.SetStateAction<{
     images: File[];
     contentType: string;
+    productInfo: string;
     sellingPoints: string;
     targetAudience: string;
   }>>;

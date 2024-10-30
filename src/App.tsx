@@ -37,7 +37,7 @@ const uploadImage = async (file: File): Promise<string> => {
     const token = import.meta.env.VITE_COZE_AUTH_TOKEN;
     console.log('开始上传图片...');
     console.log('上传的文件大小:', file.size, '字节');
-    console.log('上传文件类型:', file.type);
+    console.log('上传件类型:', file.type);
 
     const response = await fetch('https://api.coze.cn/v1/files/upload', {
       method: 'POST',
@@ -524,7 +524,7 @@ function App() {
         throw new Error('未能生成新的图片');
       }
     } catch (error) {
-      console.error('重新生成图片时发生错误:', error);
+      console.error('重新生���图片时发生错误:', error);
       if (error instanceof Error) {
         setError(error.message);
       }
@@ -541,7 +541,7 @@ function App() {
           <div className="w-full lg:w-1/3 bg-zinc-800 rounded-2xl shadow-2xl p-8 border border-zinc-700">
             <h1 className="text-3xl font-bold text-white mb-8 flex items-center">
               <Wand2 className="w-8 h-8 mr-3 text-emerald-500" />
-              AI笔记生成器
+              Cox小红书笔记生成器
             </h1>
             
             <form onSubmit={handleSubmit} className="space-y-8">
@@ -715,6 +715,7 @@ function App() {
                   <ContentDisplay
                     title={generatedContent.title}
                     content={generatedContent.content}
+                    images={generatedContent.images}
                     onRegenerateContent={handleRegenerateContent}
                     onRegenerateImages={handleRegenerateImages}
                   />
