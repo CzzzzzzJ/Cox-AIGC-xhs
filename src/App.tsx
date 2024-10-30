@@ -524,7 +524,7 @@ function App() {
         throw new Error('未能生成新的图片');
       }
     } catch (error) {
-      console.error('重新生���图片时发生错误:', error);
+      console.error('重新生成图片时发生错误:', error);
       if (error instanceof Error) {
         setError(error.message);
       }
@@ -534,17 +534,17 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-900 to-black py-12">
-      <div className="container mx-auto px-6">
-        <div className="flex flex-col lg:flex-row gap-10">
+    <div className="min-h-screen min-w-[320px] bg-gradient-to-br from-zinc-900 to-black py-4 sm:py-12">
+      <div className="container mx-auto px-4 sm:px-6">
+        <div className="flex flex-col lg:flex-row gap-6 sm:gap-10">
           {/* 左侧表单 */}
-          <div className="w-full lg:w-1/3 bg-zinc-800 rounded-2xl shadow-2xl p-8 border border-zinc-700">
-            <h1 className="text-3xl font-bold text-white mb-8 flex items-center">
-              <Wand2 className="w-8 h-8 mr-3 text-emerald-500" />
+          <div className="w-full lg:w-1/3 bg-zinc-800 rounded-xl sm:rounded-2xl shadow-2xl p-4 sm:p-8 border border-zinc-700">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-6 sm:mb-8 flex items-center">
+              <Wand2 className="w-6 h-6 sm:w-8 sm:h-8 mr-2 sm:mr-3 text-emerald-500" />
               Cox小红书笔记生成器
             </h1>
             
-            <form onSubmit={handleSubmit} className="space-y-8">
+            <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
               <ImageUpload
                 imagePreviews={imagePreviews}
                 setImagePreviews={setImagePreviews}
@@ -680,18 +680,18 @@ function App() {
           </div>
 
           {/* 右侧预览区域 */}
-          <div className="w-full lg:w-2/3 bg-zinc-800 rounded-2xl shadow-2xl p-8 border border-zinc-700">
-            <div className="space-y-8">
+          <div className="w-full lg:w-2/3 bg-zinc-800 rounded-xl sm:rounded-2xl shadow-2xl p-4 sm:p-8 border border-zinc-700">
+            <div className="space-y-6 sm:space-y-8">
               {/* 图片区域 */}
               <div className="relative">
                 {isGeneratingImages ? (
-                  <div className="flex flex-col items-center justify-center py-16 bg-zinc-900/50 rounded-xl border border-zinc-700">
-                    <div className="relative w-20 h-20">
+                  <div className="flex flex-col items-center justify-center py-8 sm:py-16 bg-zinc-900/50 rounded-xl border border-zinc-700">
+                    <div className="relative w-16 sm:w-20 h-16 sm:h-20">
                       <div className="absolute top-0 left-0 w-full h-full border-4 border-emerald-500/20 rounded-full animate-ping"></div>
                       <div className="absolute top-0 left-0 w-full h-full border-4 border-emerald-500 rounded-full animate-spin"></div>
                     </div>
-                    <p className="mt-6 text-lg text-zinc-300">正在生成图片</p>
-                    <p className="text-sm text-zinc-500">AI正在为您创作精美图片</p>
+                    <p className="mt-4 sm:mt-6 text-base sm:text-lg text-zinc-300">正在生成图片</p>
+                    <p className="text-xs sm:text-sm text-zinc-500">AI正在为您创作精美图片</p>
                   </div>
                 ) : (
                   <ImageGallery images={generatedContent.images} />
@@ -701,15 +701,15 @@ function App() {
               {/* 文案区域 */}
               <div className="relative">
                 {isGeneratingContent ? (
-                  <div className="flex flex-col items-center justify-center py-16 bg-zinc-900/50 rounded-xl border border-zinc-700">
-                    <div className="relative w-20 h-20">
+                  <div className="flex flex-col items-center justify-center py-8 sm:py-16 bg-zinc-900/50 rounded-xl border border-zinc-700">
+                    <div className="relative w-16 sm:w-20 h-16 sm:h-20">
                       <svg className="animate-spin w-full h-full text-emerald-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
                     </div>
-                    <p className="mt-6 text-lg text-zinc-300">正在生成文案</p>
-                    <p className="text-sm text-zinc-500">AI正在为您撰写优质内容</p>
+                    <p className="mt-4 sm:mt-6 text-base sm:text-lg text-zinc-300">正在生成文案</p>
+                    <p className="text-xs sm:text-sm text-zinc-500">AI正在为您撰写优质内容</p>
                   </div>
                 ) : (
                   <ContentDisplay
