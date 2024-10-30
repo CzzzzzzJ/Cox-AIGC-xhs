@@ -105,7 +105,7 @@ export const ContentDisplay: React.FC<ContentDisplayProps> = ({
         </button>
         <button
           onClick={handleDownload}
-          className="flex-1 flex items-center justify-center gap-2 px-4 py-3 
+          className="hidden md:flex flex-1 items-center justify-center gap-2 px-4 py-3 
             bg-emerald-600 hover:bg-emerald-700 text-white
             rounded-lg transition-all duration-200"
         >
